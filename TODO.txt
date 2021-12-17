@@ -1,0 +1,14 @@
+
+
+
+
+Ok !
+
+Donc openssl refuse de generer des cles de 64 bits mais peut les lires
+	- openssl rsa -in key -text
+	- openssl rsautl inkey key -encrypt -in to_crypt.txt -raw
+
+
+I remove the encryption header so des will not work anymore
+
+Need to rework the prime generation to be able to explain it clearly
