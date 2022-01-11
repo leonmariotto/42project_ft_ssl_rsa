@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/18 10:22:53 by leon              #+#    #+#             */
-/*   Updated: 2021/12/17 12:01:55 by lmariott         ###   ########.fr       */
+/*   Updated: 2021/12/24 20:39:28 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,16 @@ typedef struct			s_rsautl_opt
 typedef struct			s_asn_obj
 {
 	uint8_t		id;
-	uint8_t		len_len;
+	uint8_t		len_len; // si len_len == 2 alors len += 3...
+				// Soit je gere toutes les len_len
+				// Soit je bricole un truc pour len_len <= 2
+				// TODO remove len_len and only handle size <= 128
 	uint64_t	len;
 	uint8_t		*content;
 }				t_asn_obj;
 
 int			open_randomfd(char *file);
-uint64_t		gen_prime(int randomfd, bool verb);
+uint32_t		gen_prime(int randomfd, bool verb);
 int			get_random(void	*ptr, size_t size, int randomfd);
 int			gen_enckey(uint32_t p, uint32_t q, int randomfd);
 uint32_t		euclide(uint32_t a, uint32_t b);
@@ -127,18 +130,31 @@ int64_t		gcd_extended(int64_t a, int64_t b, int64_t *u, int64_t *v);
 uint64_t		pow_mod(uint64_t a, uint64_t b, uint64_t mod);
 
 void			print_modulus(t_list *top);
-int			rsa_print_out(t_rsa_key key, t_rsa_opt opt);
+//int			rsa_print_out(t_rsa_key key, t_rsa_opt opt);
+int			rsa_print_out(t_list *top, t_rsa_opt opt);
 //int			print_text(t_rsa_key key, bool pub);
 int			first_parse(char **input, bool pub, int *len);
 int			rsa_getopt(t_rsa_opt *opt, void **av, int ac);
 int			rsa_extract_key(char **input, int *len, bool pub,
 		char *paswd, t_list **top);
 int			parse_pem(char **input, bool pub, int *len);
-void				rsa_deserializer(t_rsa_key key, uint8_t *buf, bool pub);
-int				rsa_serializer(char *buf, int len, t_list **top);
+uint32_t				rsa_deserializer(t_rsa_key key, uint8_t *buf, bool pub);
+int				asn_serialize(char *buf, int len, t_list **top);
 uint64_t		mult_mod(uint64_t a, uint64_t b, uint64_t mod);
 void			print_text(t_list *top, t_rsa_opt opt);
 int			check_key(t_list *top);
+int				asn_deserialize(t_list *top, bool pub,
+			uint8_t **ptr);
+// rsa_serializer.c
+int				ft_memcpy_inv(void *dst, void *src, int size);
+int				decode_integer(uint8_t *buf, t_asn_obj *obj);
+int				decode_sequence(uint8_t *buf, t_list **top);
+int				rsa_serializer(char *buf, int len, t_list **top);
+
+
+int			rsa_extract_key_struct(char **input, int *len, bool pub,
+		char *paswd, t_rsa_key *key);
+int			asn_serialize_struct(char *buf, int len, t_rsa_key *key);
 
 #endif
 

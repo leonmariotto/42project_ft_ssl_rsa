@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:18:36 by leon              #+#    #+#             */
-/*   Updated: 2022/01/11 18:53:23 by leon             ###   ########.fr       */
+/*   Updated: 2022/01/10 16:42:00 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-// Is this thing do somthing more than a memcpy inv ?
 uint64_t	reverse_bits_u64(uint64_t in)
 {
 	int			i;
@@ -96,9 +95,10 @@ int			run_rsautl(char **av, int ac)
 	char		buf[8];
 	int		len;
 	uint64_t	out;
-//	int		i;
+	int		i;
 	int		l;
 
+	out = 0;
 	ft_bzero(&opt, sizeof(opt));
 	if (!(rsautl_getopt(&opt, av, ac)))
 		return (0);
@@ -117,15 +117,10 @@ int			run_rsautl(char **av, int ac)
 		free(input);
 		return (err_return("rsautl: input too big\n"));
 	}
-	ft_memcpy_inv(buf, input, len);
-	//ft_memcpy(buf, input, len);
+	//ft_memcpy_inv(buf, input, len);
+	ft_memcpy(buf, input, len);
 	free(input);
 	fprintf(stderr, "buf = %016lu\n", (*(uint64_t*)buf));
-	fprintf(stderr, "key.modulus = %016lx\n", key.modulus);
-	fprintf(stderr, "key.privateExponent = %016lx\n", key.privateExponent);
-	fprintf(stderr, "key.publicExponent = %08x\n", key.publicExponent);
-	fprintf(stderr, "key.prime1 = %08x\n", key.prime1);
-	fprintf(stderr, "key.prime2 = %08x\n", key.prime2);
 	if (*((uint64_t*)buf) > key.modulus)
 		return (err_return("rsautl: input too big\n"));
 	//out = *(uint64_t*)buf;
@@ -136,6 +131,7 @@ int			run_rsautl(char **av, int ac)
 	//	out |= (uint64_t)buf[i++];
 	//	fprintf(stderr, "msg[%d] = %016lu\n", i, out);
 	//}
+	fprintf(stderr, "out = %016lu\n", out);
 	if (opt.decrypt)
 	{
 		if (opt.pubin)
@@ -148,34 +144,31 @@ int			run_rsautl(char **av, int ac)
 		out = pow_mod((*(uint64_t*)buf), key.publicExponent, key.modulus);
 	//	out = pow_mod(out, key.publicExponent, key.modulus);
 	fprintf(stderr, "out = %016lu\n", out);
+	//fprintf(stderr, "in = %016lu\n", *((uint64_t*)buf));
+	//fprintf(stderr, "in = %016lx\n", *((uint64_t*)buf));
+	fprintf(stderr, "key.modulus = %016lx\n", key.modulus);
+	fprintf(stderr, "key.privateExponent = %016lx\n", key.privateExponent);
+	fprintf(stderr, "key.publicExponent = %08x\n", key.publicExponent);
+	fprintf(stderr, "key.prime1 = %08x\n", key.prime1);
+	fprintf(stderr, "key.prime2 = %08x\n", key.prime2);
 	//fprintf(stderr, "e * d = %016lu\n", ((uint64_t)key.privateExponent) * ((uint64_t)key.publicExponent));
 	//fprintf(stderr, "(p - 1) * (q - 1) = %016lu\n", ((uint64_t)key.prime1 - 1) * ((uint64_t)key.prime2 - 1));
 	if (opt.hexdump)
 		write(2, "0000		", 6);
-//	i = 0;
+	i = 0;
 	l = 7;
 	while (((uint8_t*)&out)[l] == 0 && l >= 0)
 		l--;
-	while (l + 1)
+	while (i < l + 1)
 	{
 		if (opt.hexdump)
 		{
-			ft_putu8_hex_fd(((uint8_t*)&out)[l], 2);
+			ft_putu8_hex_fd(((uint8_t*)&out)[i], 2);
 			write(2, " ", 1);
 		}
-		ft_putchar_fd(((uint8_t*)&out)[l], opt.outfd);
-		l--;
+		ft_putchar_fd(((uint8_t*)&out)[i], opt.outfd);
+		i++;
 	}
-	//while (i < l + 1)
-	//{
-	//	if (opt.hexdump)
-	//	{
-	//		ft_putu8_hex_fd(((uint8_t*)&out)[i], 2);
-	//		write(2, " ", 1);
-	//	}
-	//	ft_putchar_fd(((uint8_t*)&out)[i], opt.outfd);
-	//	i++;
-	//}
 	if (opt.hexdump)
 		write(2, "\n", 1);
 	return (1);

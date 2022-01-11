@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 10:12:35 by leon              #+#    #+#             */
-/*   Updated: 2021/12/15 21:08:18 by lmariott         ###   ########.fr       */
+/*   Updated: 2021/12/20 22:28:35 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ bool				ft_isprime(uint32_t nb, uint32_t iter, int randomfd, bool verb)
 	return (true);
 }
 
-u_int64_t			gen_prime(int randomfd, bool verb)
+uint32_t			gen_prime(int randomfd, bool verb)
 {
 	uint32_t	r;
 
@@ -107,7 +107,7 @@ u_int64_t			gen_prime(int randomfd, bool verb)
 	       return (0);
 	while (!ft_isprime(r, 34, randomfd, verb))
 	{
-		if (!get_random(&r, 8, randomfd))
+		if (!get_random(&r, 4, randomfd))
 			return (0);
 		if (verb)
 			write(2, ".", 1);

@@ -1,62 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asn.c                                              :+:      :+:    :+:   */
+/*   asn_serializer.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmariott <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/16 16:46:29 by lmariott          #+#    #+#             */
-/*   Updated: 2021/12/17 17:21:14 by lmariott         ###   ########.fr       */
+/*   Created: 2021/12/24 15:30:23 by leon              #+#    #+#             */
+/*   Updated: 2022/01/10 12:15:11 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rsa.h"
-
-int				encode_integer(uint8_t *i, uint8_t *buf, int len)
-{
-	buf[0] = 0x02;
-	buf[1] = (uint8_t)len;
-	ft_memcpy(&buf[2], i, len);
-	return (2 + len);
-}
-
-void				rsa_deserializer(t_rsa_key key, uint8_t *buf, bool pub)
-{
-	int i;
-	uint8_t version;
-
-	i = 0;
-	version = 0x00;
-	buf[i++] = 0x30;
-	buf[i++] = pub ? 18 : 60;
-	i += encode_integer((uint8_t*)&version, &buf[i], 1);
-	i += encode_integer((uint8_t*)&key.modulus, &buf[i], 8);
-	i += encode_integer((uint8_t*)&key.publicExponent, &buf[i], 3);
-	if (pub)
-		return ;
-	i += encode_integer((uint8_t*)&key.privateExponent, &buf[i], 8);
-	i += encode_integer((uint8_t*)&key.prime1, &buf[i], 5);
-	i += encode_integer((uint8_t*)&key.prime2, &buf[i], 5);
-	i += encode_integer((uint8_t*)&key.exponent1, &buf[i], 4);
-	i += encode_integer((uint8_t*)&key.exponent2, &buf[i], 4);
-	i += encode_integer((uint8_t*)&key.coefficient, &buf[i], 4);
-}
-
-int				ft_memcpy_inv(void *dst, void *src, int size)
-{
-	int i;
-	int j;
-
-	i = size - 1;
-	j = 0;
-	while (i >= 0)
-	{
-		((uint8_t*)dst)[j] = ((uint8_t*)src)[i];
-		i--;
-		j++;
-	}
-	return (1);
-}
 
 int				decode_integer(uint8_t *buf, t_asn_obj *obj)
 {
@@ -64,19 +18,34 @@ int				decode_integer(uint8_t *buf, t_asn_obj *obj)
 	uint64_t	len;
 	uint8_t		hlen;
 	int		i;
+	int		ad;
 
 	i = 1;
 	len_len = 1;
 	if (buf[i] & 0x80)
-		len_len = (buf[i++] ^ 0x80);
+		return (err_return("rsa: lenght too long, only handle len<=128\n"));
+		//len_len = (buf[i++] ^ 0x80);
 	ft_bzero(&len, 8);
-	ft_memcpy_inv(&len, &buf[i], len_len);
+	ft_memcpy(&len, &buf[i], len_len);
 	hlen = i + len_len;
 	obj->id = buf[0];
 	obj->len = len;
-	if (!(obj->content = malloc(len)))
-		return (err_return("asn: error"));
-	ft_memcpy(obj->content, &buf[hlen], len);
+	obj->len_len = len_len;
+	ad = (buf[hlen] == 0 ? 1 : 0);
+	if (len - ad != 0)
+	{
+		if (!(obj->content = ft_memalloc(len - ad)))
+			return (err_return("asn: error"));
+		ft_memcpy_inv(obj->content, &buf[hlen + ad], len - ad);
+	}
+	else
+	{
+		if (!(obj->content = ft_memalloc(1)))
+			return (err_return("asn: error"));
+	}
+	//fprintf(stderr, "hlen : %x ; ad : %x\n", hlen, ad);
+	//fprintf(stderr, "first byte of obj content : %x\n", buf[hlen + ad]);
+	//fprintf(stderr, "buf[hlen] : %x\n", buf[hlen]);
 	return (len + hlen);
 }
 
@@ -92,11 +61,18 @@ int				decode_sequence(uint8_t *buf, t_list **top)
 	i = 1;
 	len_len = 1;
 	if (buf[i] & 0x80)
-		len_len = (buf[i++] ^ 0x80);
+		return (err_return("rsa: lenght too long, only handle len<=128\n"));
+		//len_len = (buf[i++] ^ 0x80);
 	ft_bzero(&len, 8);
-	ft_memcpy_inv(&len, &buf[i], len_len);
+	ft_memcpy(&len, &buf[i], len_len);
 	i += len_len;
 	hlen = i;
+	fprintf(stderr, "decode: len of the sequence = %lu\n", len);
+	//fprintf(stderr, "buf = ");
+	//uint8_t j = 0;
+	//while (j < len)
+	//	fprintf(stderr, "%hhx:", buf[j++]);
+	//fprintf(stderr, "\n");
 	while (i < len + hlen)
 	{
 		if (buf[i] == 0x02)
@@ -116,7 +92,7 @@ int				decode_sequence(uint8_t *buf, t_list **top)
 	return (len + hlen);
 }
 
-int				rsa_serializer(char *buf, int len, t_list **top) // is pub needed ??
+int				asn_serialize(char *buf, int len, t_list **top)
 {
 	int		i;
 	int		r;

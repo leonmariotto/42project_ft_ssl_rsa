@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 15:08:00 by leon              #+#    #+#             */
-/*   Updated: 2021/12/17 17:13:29 by lmariott         ###   ########.fr       */
+/*   Updated: 2021/12/20 22:32:55 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int			check_key(t_list *top)
 	uint32_t	prime2;
 
 	head = top;
-	head = head->next; // Skip version
-	head = head->next; // Skip modulus
+	head = head->next;
+	head = head->next;
 	if (((t_asn_obj*)head->content)->len > 4)
 		err_return("publicExponent: Invalid lenght");
 	ft_memcpy(&publicExponent, ((t_asn_obj*)head->content)->content, ((t_asn_obj*)head->content)->len);
@@ -58,8 +58,6 @@ int			rsa_process(t_list *top, t_rsa_opt opt)
 			err_return("rsa: check opt is for private key");
 		if (!check_key(top))
 			return (0);
-		// Here i have to check len.
-		
 		//tmp = lcm(key.prime1 - 1, key.prime2 - 1);
 		//if (mult_mod(key.privateExponent, key.publicExponent, tmp) != 1)
 		//	err_return("rsa: check failed, key invalid");
@@ -72,6 +70,8 @@ int			rsa_process(t_list *top, t_rsa_opt opt)
 		print_modulus(top);
 	if (!opt.noout)
 	{
+		if (!(rsa_print_out(top, opt)))
+			return (0);
 		//if (!(rsa_print_out(key, opt)))
 		//	return (0);
 	}

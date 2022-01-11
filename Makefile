@@ -10,7 +10,7 @@
 # **************************************************************************** #
 
 NAME := ft_ssl
-CC ?= clang
+CC ?= clang9
 CFLAGS ?= -Wall -Wextra -Werror -g3
 
 SRC := src/main.c \
@@ -63,7 +63,9 @@ SRC := src/main.c \
 	src/rsa-common/rsa_keyextract.c \
 	src/rsa-common/pem.c \
 	src/rsautl/run_rsautl.c \
-	src/asn1/asn.c
+	src/asn1/asn_deserializer.c \
+	src/asn1/asn_serializer.c \
+	src/asn1/asn_serializer_struct.c
 
 
 HDR := libft/libft.h	

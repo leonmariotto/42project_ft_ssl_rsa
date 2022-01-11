@@ -123,7 +123,8 @@ SRC =	ft_putstr.c\
          ft_memdup.c \
          ft_puthexlen.c \
          ft_readfd.c \
-	 err_return.c
+	 err_return.c \
+	ft_memcpy_inv.c
 
 HDR = libft.h, get_next_line.h
 OBJ = $(SRC:.c=.o)

@@ -12,3 +12,30 @@ Donc openssl refuse de generer des cles de 64 bits mais peut les lires
 I remove the encryption header so des will not work anymore
 
 Need to rework the prime generation to be able to explain it clearly
+
+FIXIT: Endianess issues when store in uint8_t*.
+	WTF ? -> openssl asn1parse give my params endian inverted so need to store it inverted. (not use it inverted)
+	x86 is little_endian and asn store big endian so invert all when serialize AND deserialize to be able to cross with openssl
+FIXIT: All end private key parameters are used by openssl so need to get it.
+FIXIT: DES encryption of key.
+
+1 - Get my rsautl work internally.
+	-> Re-build all rsautl.
+1.1 - Get openssl work with my key.
+	-> Done
+
+As of end of day 10/01/2022 :
+-> I have broken rsautl but openssl can encrypt/decrypt with my key. Need to re-build rsautl.
+-> Have to get the same result of rsautl -encrypt (openssl and ft_ssl)
+-> Chinese remainder for decryption
+-> Still need to support des
+
+TODO: re-build rsautl
+TODO: clean/reorganize asn ( ALL )
+
+
+2 - Cross with openssl
+	-> Done.
+
+
+TODO: pub key rsautl

@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:00:12 by leon              #+#    #+#             */
-/*   Updated: 2021/12/17 17:18:47 by lmariott         ###   ########.fr       */
+/*   Updated: 2021/12/24 20:14:55 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,24 @@ int			rsa_extract_key(char **input, int *len, bool pub,
 	(void)paswd;
 	//if (!(rsa_decrypt_key(input, len, paswd))) // TODO
 	//	return (err_return("rsa_extract_key: des decryption failed\n"));
-	rsa_serializer(*input, *len, top);
+	asn_serialize(*input, *len, top);
+	return (1);
+}
+
+int			rsa_extract_key_struct(char **input, int *len, bool pub,
+		char *paswd, t_rsa_key *key)
+{
+	void	*tmp;
+
+	if (!parse_pem(input, pub, len))
+		return (err_return("rsa_extract_key: parse-pem failed\n"));
+        if (!(base64((void **)&tmp, (unsigned char*)(*input), len, 1)))
+		return (err_return("rsa_extract_key: base64 decryption failed\n"));
+	free(*input);
+	*input = tmp;
+	(void)paswd;
+	//if (!(rsa_decrypt_key(input, len, paswd))) // TODO
+	//	return (err_return("rsa_extract_key: des decryption failed\n"));
+	asn_serialize_struct(*input, *len, key);
 	return (1);
 }
