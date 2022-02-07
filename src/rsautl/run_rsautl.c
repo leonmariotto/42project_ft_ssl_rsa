@@ -6,78 +6,12 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:18:36 by leon              #+#    #+#             */
-/*   Updated: 2022/01/11 18:53:23 by leon             ###   ########.fr       */
+/*   Updated: 2022/01/12 19:18:12 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rsa.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
-// Is this thing do somthing more than a memcpy inv ?
-uint64_t	reverse_bits_u64(uint64_t in)
-{
-	int			i;
-	uint64_t	ret;
-
-	i = 0;
-	ret = 0;
-	while (i < 64 / 8)
-	{
-		ret = ret << 8;
-		ret |= (in >> (i * 8)) & 0xFF;
-		i++;
-	}
-	return (ret);
-}
-
-int			rsautl_getopt(t_rsautl_opt *opt, char **av, int ac)
-{
-	int i;
-
-	i = 1;
-	while (++i < ac)
-	{
-		if (!ft_strcmp(av[i], "-in"))
-		{
-			++i;
-			if (((*opt).infd = open(av[i], O_RDONLY)) < 0)
-				return (0);
-		}
-		else if (!ft_strcmp(av[i], "-out"))
-		{
-			++i;
-			if (((*opt).outfd = open(av[i], O_CREAT |
-					O_TRUNC | O_RDWR, S_IRUSR | S_IWUSR)) < 0)
-				return (0);
-		}
-		else if (!ft_strcmp(av[i], "-inkey"))
-		{
-			++i;
-			if (((*opt).keyfd = open(av[i], O_RDONLY)) < 0)
-				return (0);
-		}
-		else if (!ft_strcmp(av[i], "-pass"))
-		{
-			i++;
-			(*opt).pass = av[i];
-		}
-		else if (!ft_strcmp(av[i], "-pubin"))
-			(*opt).pubin = 1;
-		else if (!ft_strcmp(av[i], "-encrypt"))
-			(*opt).decrypt = 0;
-		else if (!ft_strcmp(av[i], "-decrypt"))
-			(*opt).decrypt = 1;
-		else if (!ft_strcmp(av[i], "-d"))
-			(*opt).decrypt = 1;
-		else if (!ft_strcmp(av[i], "-hexdump"))
-			(*opt).hexdump = 1;
-		else
-			return (err_return("unknow opt\n"));
-	}
-	return (1);
-}
 void			ft_putu8_hex_fd(uint8_t n, int fd)
 {
 	char base[16];
@@ -96,7 +30,6 @@ int			run_rsautl(char **av, int ac)
 	char		buf[8];
 	int		len;
 	uint64_t	out;
-//	int		i;
 	int		l;
 
 	ft_bzero(&opt, sizeof(opt));
@@ -118,16 +51,17 @@ int			run_rsautl(char **av, int ac)
 		return (err_return("rsautl: input too big\n"));
 	}
 	ft_memcpy_inv(buf, input, len);
-	//ft_memcpy(buf, input, len);
 	free(input);
-	fprintf(stderr, "buf = %016lu\n", (*(uint64_t*)buf));
-	fprintf(stderr, "key.modulus = %016lx\n", key.modulus);
-	fprintf(stderr, "key.privateExponent = %016lx\n", key.privateExponent);
-	fprintf(stderr, "key.publicExponent = %08x\n", key.publicExponent);
-	fprintf(stderr, "key.prime1 = %08x\n", key.prime1);
-	fprintf(stderr, "key.prime2 = %08x\n", key.prime2);
 	if (*((uint64_t*)buf) > key.modulus)
 		return (err_return("rsautl: input too big\n"));
+	//fprintf(stderr, "buf = %016lu\n", (*(uint64_t*)buf));
+	//fprintf(stderr, "key.modulus = %016lx\n", key.modulus);
+	//fprintf(stderr, "key.privateExponent = %016lx\n", key.privateExponent);
+	//fprintf(stderr, "key.publicExponent = %08x\n", key.publicExponent);
+	//fprintf(stderr, "key.prime1 = %08x\n", key.prime1);
+	//fprintf(stderr, "key.prime2 = %08x\n", key.prime2);
+	//fprintf(stderr, "e * d = %016lu\n", ((uint64_t)key.privateExponent) * ((uint64_t)key.publicExponent));
+	//fprintf(stderr, "(p - 1) * (q - 1) = %016lu\n", ((uint64_t)key.prime1 - 1) * ((uint64_t)key.prime2 - 1));
 	//out = *(uint64_t*)buf;
 	//i = 0;
 	//while (i < len)
@@ -140,19 +74,13 @@ int			run_rsautl(char **av, int ac)
 	{
 		if (opt.pubin)
 			return err_return("rsautl: you're trying to decrypt with a pub key...\n");
-		// TODO USE THE CHINESE REMEEEEEEINDEEEEER	
 		out = pow_mod((*(uint64_t*)buf), key.privateExponent, key.modulus);
-	//	out = pow_mod(out, key.privateExponent, key.modulus);
 	}
 	else
 		out = pow_mod((*(uint64_t*)buf), key.publicExponent, key.modulus);
-	//	out = pow_mod(out, key.publicExponent, key.modulus);
-	fprintf(stderr, "out = %016lu\n", out);
-	//fprintf(stderr, "e * d = %016lu\n", ((uint64_t)key.privateExponent) * ((uint64_t)key.publicExponent));
-	//fprintf(stderr, "(p - 1) * (q - 1) = %016lu\n", ((uint64_t)key.prime1 - 1) * ((uint64_t)key.prime2 - 1));
+	//fprintf(stderr, "out = %016lu\n", out);
 	if (opt.hexdump)
 		write(2, "0000		", 6);
-//	i = 0;
 	l = 7;
 	while (((uint8_t*)&out)[l] == 0 && l >= 0)
 		l--;
@@ -179,14 +107,4 @@ int			run_rsautl(char **av, int ac)
 	if (opt.hexdump)
 		write(2, "\n", 1);
 	return (1);
-	//fprintf(stderr, "len = %d\n", len);
-	//dprintf(opt.outfd, "%c%c%c%c%c%c%c%c",
-	//		((uint8_t*)&out)[0],
-	//		((uint8_t*)&out)[1],
-	//		((uint8_t*)&out)[2],
-	//		((uint8_t*)&out)[3],
-	//		((uint8_t*)&out)[4],
-	//		((uint8_t*)&out)[5],
-	//		((uint8_t*)&out)[6],
-	//		((uint8_t*)&out)[7]);
 }

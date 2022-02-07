@@ -6,7 +6,7 @@
 /*   By: lmariott <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:46:29 by lmariott          #+#    #+#             */
-/*   Updated: 2022/01/10 12:25:19 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/07 14:03:53 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,25 @@ fprintf(stderr, "len = %ld ; len_len = %d\n", len, len_len);
 		i += ((t_asn_obj*)head->content)->len_len;
 //		if (((t_asn_obj*)head->content)->content[0] == 0 &&
 //			((t_asn_obj*)head->content)->len != 1)
-		if (((t_asn_obj*)head->content)->content[0] & 0x80)
+		if (((t_asn_obj*)head->content)->content[((t_asn_obj*)head->content)->len] & 0x80)
 		{
 			// TODO MODIFY THE LEN AT SERIALIZE AND DESERIALIZE???
 			msg[i] = 0x00;
+			//msg[i + ((t_asn_obj*)head->content)->len] = 0x00;
 	//		ft_memcpy(&msg[i], &((t_asn_obj*)head->content)->content[1],
 	//			((t_asn_obj*)head->content)->len - 1);
 			//ft_memcpy_inv(&msg[i + 1], ((t_asn_obj*)head->content)->content,
 			//	((t_asn_obj*)head->content)->len - 1);
-			ft_memcpy(&msg[i + 1], ((t_asn_obj*)head->content)->content,
+			//ft_memcpy(&msg[i + 1], ((t_asn_obj*)head->content)->content,
+			//	((t_asn_obj*)head->content)->len - 1);
+			ft_memcpy_inv(&msg[i + 1], ((t_asn_obj*)head->content)->content,
 				((t_asn_obj*)head->content)->len - 1);
 		}
 		else
 		{
 			//ft_memcpy_inv(&msg[i], ((t_asn_obj*)head->content)->content,
 			//	((t_asn_obj*)head->content)->len);
-			ft_memcpy(&msg[i], ((t_asn_obj*)head->content)->content,
+			ft_memcpy_inv(&msg[i], ((t_asn_obj*)head->content)->content,
 				((t_asn_obj*)head->content)->len);
 		}
 		i += ((t_asn_obj*)head->content)->len;

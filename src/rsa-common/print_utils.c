@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 09:57:29 by leon              #+#    #+#             */
-/*   Updated: 2021/12/17 17:15:21 by lmariott         ###   ########.fr       */
+/*   Updated: 2022/01/13 18:24:05 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void			print_obj(t_asn_obj *obj)
 	{
 		ft_putchar_fd(base[obj->content[i] / 16], 2);
 		ft_putchar_fd(base[obj->content[i] % 16], 2);
-//		ft_putchar_fd(':', 2);
 		i++;
 	}
 	write(2, "\n", 1);
@@ -63,20 +62,10 @@ void			print_obj(t_asn_obj *obj)
 void			print_text(t_list *top, t_rsa_opt opt)
 {
 	t_list *head;
-	//int i = 0;
 
 	head = top;
-	//while (head)
-	//{
-	//	i++;
-	//	fprintf(stderr, "i = %d\n", i);
-	//	print_obj(head->content);
-	//	head = head->next;
-	//}
-	head = head->next; // skip version
+	head = head->next;
 	ft_putstr_fd("modulus : ", 2);
-	if (!head)
-		fprintf(stderr, "unexpected!\n");
 	print_obj(head->content);
 	write(2, "\n", 1);
 	head = head->next;
@@ -117,30 +106,8 @@ void			print_modulus(t_list *top)
 	t_list *head;
 
 	head = top;
-	head = head->next; // skip version
+	head = head->next;
 	ft_putstr_fd("modulus : ", 2);
 	print_obj(head->content);
 	write(2, "\n", 1);
 }
-
-
-//int			print_text(t_rsa_key key, bool pub)
-//{
-//	if (!pub)
-//	{
-//		myprintulong("modulus : ", key.modulus);
-//		myprintu("publicExponent: ", key.publicExponent);
-//		myprintulong("privateExponent: ", key.privateExponent);
-//		myprintu("prime1: ", key.prime1);
-//		myprintu("prime2: ", key.prime2);
-//		myprintu("exponent1: ", key.exponent1);
-//		myprintu("exponent2: ", key.exponent2);
-//		myprintu("coefficient: ", key.coefficient);
-//	}
-//	if (pub)
-//	{
-//		myprintulong("modulus : ", key.modulus);
-//		myprintu("publicExponent: ", key.publicExponent);
-//	}
-//	return (1);
-//}

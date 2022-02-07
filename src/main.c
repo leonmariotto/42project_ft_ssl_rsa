@@ -6,7 +6,7 @@
 /*   By: lmariott <lmariott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 20:06:32 by lmariott          #+#    #+#             */
-/*   Updated: 2021/08/28 18:54:48 by lmariott         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:17:44 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void        print_usage(void)
 {
     ft_putendl("usage: ./ft_ssl command [command opts] [command args]");
     ft_putendl("Standard commands:");
+    ft_putendl("rsa");
+    ft_putendl("genrsa");
+    ft_putendl("rsautl");
     ft_putstr("\n");
     ft_putendl("Message Digest commands:");
     ft_putstr("md5\n");

@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 20:14:07 by leon              #+#    #+#             */
-/*   Updated: 2021/12/24 15:43:38 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/07 18:07:29 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int			print_pub(uint8_t *cyph, int len, uint8_t hdr, int fd)
 	ft_memcpy(buf + 1, cyph, len);
 	if (!base64(&b64, buf, &len, 0))
 		return (0);
-	ft_putendl_fd("----BEGIN PUBLIC KEY----", fd);
+	ft_putendl_fd("-----BEGIN PUBLIC KEY-----", fd);
 	print_base64(fd, b64, len);
-	ft_putendl_fd("----END PUBLIC KEY----", fd);
+	ft_putendl_fd("-----END PUBLIC KEY-----", fd);
 	free(b64);
 	return (1);
 }
@@ -53,16 +53,17 @@ int			rsa_print_out(t_list *top, t_rsa_opt opt)
 	int		len;
 
 	if (opt.pubout || opt.pubin)
-		ft_putendl_fd("----BEGIN PUBLIC KEY----", opt.outfd);
+		ft_putendl_fd("-----BEGIN PUBLIC KEY-----", opt.outfd);
 	else
 		ft_putendl_fd("----BEGIN RSA PRIVATE KEY----", opt.outfd);
 	if (!(len = asn_deserialize(top, opt.pubout || opt.pubin, &msg)))
 		return (0);
 	if (!base64(&b64, msg, &len, 0))
 		return (0);
+	// TODO : IF ENCRYPTION ASKED, encrypt, print header, return output
 	print_base64(opt.outfd, b64, len);
 	if (opt.pubout || opt.pubin)
-		ft_putendl_fd("----END PUBLIC KEY----", opt.outfd);
+		ft_putendl_fd("-----END PUBLIC KEY-----", opt.outfd);
 	else
 		ft_putendl_fd("----END RSA PRIVATE KEY----", opt.outfd);
 	return (0);

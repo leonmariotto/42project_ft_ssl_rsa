@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 15:30:23 by leon              #+#    #+#             */
-/*   Updated: 2022/01/10 12:15:11 by leon             ###   ########.fr       */
+/*   Updated: 2022/01/13 18:47:02 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int				decode_integer(uint8_t *buf, t_asn_obj *obj)
 	i = 1;
 	len_len = 1;
 	if (buf[i] & 0x80)
-		return (err_return("rsa: lenght too long, only handle len<=128\n"));
+		return (err_return("asn: sequence lenght too long, only handle len<=128"));
 		//len_len = (buf[i++] ^ 0x80);
 	ft_bzero(&len, 8);
 	ft_memcpy(&len, &buf[i], len_len);
@@ -61,7 +61,7 @@ int				decode_sequence(uint8_t *buf, t_list **top)
 	i = 1;
 	len_len = 1;
 	if (buf[i] & 0x80)
-		return (err_return("rsa: lenght too long, only handle len<=128\n"));
+		return (err_return("asn: sequence lenght too long, only handle len<=128"));
 		//len_len = (buf[i++] ^ 0x80);
 	ft_bzero(&len, 8);
 	ft_memcpy(&len, &buf[i], len_len);

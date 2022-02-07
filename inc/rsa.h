@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/18 10:22:53 by leon              #+#    #+#             */
-/*   Updated: 2021/12/24 20:39:28 by leon             ###   ########.fr       */
+/*   Updated: 2022/01/12 19:20:53 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ typedef struct			s_asn_obj
 int			open_randomfd(char *file);
 uint32_t		gen_prime(int randomfd, bool verb);
 int			get_random(void	*ptr, size_t size, int randomfd);
-int			gen_enckey(uint32_t p, uint32_t q, int randomfd);
 uint32_t		euclide(uint32_t a, uint32_t b);
 uint64_t		lcm(uint64_t a, uint64_t b);
 //uint64_t			gcd_extended(uint64_t a, uint64_t b,
@@ -155,6 +154,7 @@ int				rsa_serializer(char *buf, int len, t_list **top);
 int			rsa_extract_key_struct(char **input, int *len, bool pub,
 		char *paswd, t_rsa_key *key);
 int			asn_serialize_struct(char *buf, int len, t_rsa_key *key);
+int			rsautl_getopt(t_rsautl_opt *opt, char **av, int ac);
 
 #endif
 

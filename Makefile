@@ -56,13 +56,13 @@ SRC := src/main.c \
 	src/rsa/getopt.c \
 	src/rsa-common/get_random.c \
 	src/rsa-common/gen_prime.c \
-	src/rsa-common/euclide.c \
-	src/rsa-common/gen_enckey.c \
+	src/rsa-common/gcd.c \
 	src/rsa-common/print_utils.c \
 	src/rsa-common/rsa_printout.c \
 	src/rsa-common/rsa_keyextract.c \
 	src/rsa-common/pem.c \
 	src/rsautl/run_rsautl.c \
+	src/rsautl/rsautl_getopt.c \
 	src/asn1/asn_deserializer.c \
 	src/asn1/asn_serializer.c \
 	src/asn1/asn_serializer_struct.c

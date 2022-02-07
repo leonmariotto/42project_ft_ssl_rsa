@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:00:12 by leon              #+#    #+#             */
-/*   Updated: 2021/12/24 20:14:55 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/06 13:13:49 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,16 @@ int			rsa_extract_key(char **input, int *len, bool pub,
 
 	if (!parse_pem(input, pub, len))
 		return (err_return("rsa_extract_key: parse-pem failed\n"));
+	fprintf(stderr, "input = [%s]\n", *input);
         if (!(base64((void **)&tmp, (unsigned char*)(*input), len, 1)))
-		return (err_return("rsa_extract_key: base64 decryption failed\n"));
+		return (err_return("rsa_extract_key: base64 dec failed\n"));
 	free(*input);
 	*input = tmp;
 	(void)paswd;
 	//if (!(rsa_decrypt_key(input, len, paswd))) // TODO
 	//	return (err_return("rsa_extract_key: des decryption failed\n"));
-	asn_serialize(*input, *len, top);
+	if (!(asn_serialize(*input, *len, top)))
+		return (0);
 	return (1);
 }
 
@@ -81,6 +83,7 @@ int			rsa_extract_key_struct(char **input, int *len, bool pub,
 
 	if (!parse_pem(input, pub, len))
 		return (err_return("rsa_extract_key: parse-pem failed\n"));
+	fprintf(stderr, "input = [%s]\n", *input);
         if (!(base64((void **)&tmp, (unsigned char*)(*input), len, 1)))
 		return (err_return("rsa_extract_key: base64 decryption failed\n"));
 	free(*input);
@@ -88,6 +91,7 @@ int			rsa_extract_key_struct(char **input, int *len, bool pub,
 	(void)paswd;
 	//if (!(rsa_decrypt_key(input, len, paswd))) // TODO
 	//	return (err_return("rsa_extract_key: des decryption failed\n"));
-	asn_serialize_struct(*input, *len, key);
+	if (!(asn_serialize_struct(*input, *len, key)))
+		return (0);
 	return (1);
 }

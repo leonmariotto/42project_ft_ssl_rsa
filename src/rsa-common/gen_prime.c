@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 10:12:35 by leon              #+#    #+#             */
-/*   Updated: 2021/12/20 22:28:35 by leon             ###   ########.fr       */
+/*   Updated: 2022/01/12 19:30:22 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ bool				ft_isprime(uint32_t nb, uint32_t iter, int randomfd, bool verb)
 	return (true);
 }
 
+// 34 itérations : why ?
 uint32_t			gen_prime(int randomfd, bool verb)
 {
 	uint32_t	r;
