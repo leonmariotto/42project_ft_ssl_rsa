@@ -6,7 +6,7 @@
 /*   By: lmariott <lmariott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 14:05:22 by lmariott          #+#    #+#             */
-/*   Updated: 2021/12/24 20:40:49 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/08 15:48:37 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <math.h>
 # include <stdlib.h>
+# include <stdint.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -172,5 +173,6 @@ char            *ft_ui8toa_base_len(u_int8_t n, int base, int len);
 int        ft_readfd(int fd, char **msg);
 int			err_return(char *str);
 int				ft_memcpy_inv(void *dst, void *src, int size);
+void			ft_putu8_hex_fd(uint8_t n, int fd);
 
 #endif

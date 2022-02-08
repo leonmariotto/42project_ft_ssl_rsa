@@ -6,21 +6,11 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:18:36 by leon              #+#    #+#             */
-/*   Updated: 2022/01/12 19:18:12 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/08 15:47:47 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rsa.h"
-
-void			ft_putu8_hex_fd(uint8_t n, int fd)
-{
-	char base[16];
-
-	ft_memcpy(base, "0123456789abcdef", 16);
-	if (n > 9)
-		ft_putu8_hex_fd(n / 10, fd);
-	ft_putchar_fd(base[(n % 10)], fd);
-}
 
 int			run_rsautl(char **av, int ac)
 {

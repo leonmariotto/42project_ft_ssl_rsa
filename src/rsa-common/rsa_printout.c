@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 20:14:07 by leon              #+#    #+#             */
-/*   Updated: 2022/02/07 18:07:29 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/08 20:11:36 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ int			print_priv(uint8_t *cyph, int len, uint8_t hdr, int fd)
 	ft_memcpy(buf + 1, cyph, len);
 	if (!base64(&b64, buf, &len, 0))
 		return (0);
-	ft_putendl_fd("----BEGIN RSA PRIVATE KEY----", fd);
+	ft_putendl_fd("-----BEGIN RSA PRIVATE KEY-----", fd);
 	print_base64(fd, b64, len);
-	ft_putendl_fd("----END RSA PRIVATE KEY----", fd);
+	ft_putendl_fd("-----END RSA PRIVATE KEY-----", fd);
 	free(b64);
 	return (1);
 }
@@ -50,14 +50,55 @@ int			rsa_print_out(t_list *top, t_rsa_opt opt)
 {
 	uint8_t		*msg;
 	void		*b64;
+	void		*des;
+	uint8_t		*salt;
 	int		len;
 
 	if (opt.pubout || opt.pubin)
 		ft_putendl_fd("-----BEGIN PUBLIC KEY-----", opt.outfd);
 	else
-		ft_putendl_fd("----BEGIN RSA PRIVATE KEY----", opt.outfd);
+		ft_putendl_fd("-----BEGIN RSA PRIVATE KEY-----", opt.outfd);
 	if (!(len = asn_deserialize(top, opt.pubout || opt.pubin, &msg)))
 		return (0);
+	if (opt.des_cbc || opt.des_ecb)
+	{
+		ft_putendl_fd("Proc-Type: 4,ENCRYPTED", opt.outfd);
+		if (!(gen_salt(&salt)))
+			return (err_return("gen_salt"));
+		if (opt.des_cbc)
+		{
+			ft_putstr_fd("DEK-Info: DES-CBC,", opt.outfd);
+			int i = 0;
+			while (i < 8)
+				ft_putu8_hex_fd(salt[i++], opt.outfd);
+			ft_putstr_fd("\n\n", opt.outfd);
+			if (!get_des())
+				return (0);
+			get_des()->salt = salt;
+			get_des()->iv = salt;
+			get_des()->opt->passwd = NULL;
+			get_des()->opt->nosalt = 1;
+			get_des()->opt->pbkdf2 = 0;
+			des_cbc(&des, (uint8_t*)msg, &len, 0);
+			//free(msg);
+			msg = des;
+		}
+		else
+		{
+			ft_putstr_fd("DEK-Info: DES-ECB,", opt.outfd);
+			int i = 0;
+			while (i < 8)
+				ft_putu8_hex_fd(salt[i++], opt.outfd);
+			ft_putstr_fd("\n\n", opt.outfd);
+			if (!get_des())
+				return (0);
+			get_des()->salt = salt;
+			get_des()->iv = salt;
+			des_ecb(&des, msg, &len, 0);
+			//free(msg);
+			msg = des;
+		}
+	}
 	if (!base64(&b64, msg, &len, 0))
 		return (0);
 	// TODO : IF ENCRYPTION ASKED, encrypt, print header, return output
@@ -65,7 +106,7 @@ int			rsa_print_out(t_list *top, t_rsa_opt opt)
 	if (opt.pubout || opt.pubin)
 		ft_putendl_fd("-----END PUBLIC KEY-----", opt.outfd);
 	else
-		ft_putendl_fd("----END RSA PRIVATE KEY----", opt.outfd);
+		ft_putendl_fd("-----END RSA PRIVATE KEY-----", opt.outfd);
 	return (0);
 }
 

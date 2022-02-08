@@ -6,7 +6,7 @@
 /*   By: lmariott <lmariott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 09:40:29 by lmariott          #+#    #+#             */
-/*   Updated: 2021/08/28 19:01:42 by lmariott         ###   ########.fr       */
+/*   Updated: 2022/02/08 16:12:42 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct          s_desopt
     char        a;
     char        d;
     char        v;
+    char        nosalt;
     char                pbkdf2;
     unsigned int        iter;
     int         input;

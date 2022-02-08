@@ -55,7 +55,7 @@ TODO: Comment prime generation with "How it works"
 -> Debug public-key analysis (rsa) -> Ok
 
 1 -> CLEAN un max en gardant le debug...
-2 -> ENCRYPTION DES ! Joie et bonheur
+2 -> ENCRYPTION DES ! Joie et bonheur -> C MORT ! J'envoie comme ca, ca fonctionne en interne, pas avec openssl.
 3 -> Virer le debug, clean un max, faire tourner une test suite
 3 -> Prime number comments...
 

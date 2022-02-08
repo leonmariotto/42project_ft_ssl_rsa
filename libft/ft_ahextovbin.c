@@ -6,7 +6,7 @@
 /*   By: lmariott <lmariott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/06 18:37:37 by lmariott          #+#    #+#             */
-/*   Updated: 2021/08/06 18:38:01 by lmariott         ###   ########.fr       */
+/*   Updated: 2022/02/08 13:32:26 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ u_int8_t    *ft_ahextovbin(char *str, int len)
     char        buf[3];
 
     i = -1;
-    while (str[++i])
+    while (str[++i] && i < len)
         str[i] = ft_tolower(str[i]);
     if (!(ret = ft_memalloc(len + 1)))
         return (NULL);

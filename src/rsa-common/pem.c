@@ -6,16 +6,12 @@
 /*   By: lmariott <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 14:36:32 by lmariott          #+#    #+#             */
-/*   Updated: 2022/02/07 18:04:53 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/08 20:05:03 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rsa.h"
 
-/*
-** TODO : parse pour encryption DES ici, return l'input decrypté
-** raf
-*/
 int			parse_pem(char **input, bool pub, int *len)
 {
 	char		*new;
@@ -25,8 +21,10 @@ int			parse_pem(char **input, bool pub, int *len)
 	j = 0;
 	if (!pub)
 	{
-		if (ft_strncmp(*input, "-----BEGIN RSA PRIVATE KEY-----\n", 32))
+		fprintf(stderr, "%s:%d input = {%s}\n", __func__, __LINE__, *input);
+		if (ft_memcmp(*input, "-----BEGIN RSA PRIVATE KEY-----\n", 32))
 			return (0);
+		fprintf(stderr, "%s:%d\n", __func__, __LINE__);
 		if (!(new = malloc(*len - 60)))
 			return (0);
 		i = 32;

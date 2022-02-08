@@ -6,7 +6,7 @@
 /*   By: lmariott <lmariott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/06 18:40:50 by lmariott          #+#    #+#             */
-/*   Updated: 2021/08/28 19:28:12 by lmariott         ###   ########.fr       */
+/*   Updated: 2022/02/08 19:03:52 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,11 @@ int         des_parse_opt(char **av, int *i)
         (*i)++;
         if ((des->opt->output = ft_openfile(av[*i], 1)) < 0)
             return (0);
+    }
+    else if (!ft_strcmp(av[*i], "-nosalt"))
+    {
+	(*i)++;
+        des->opt->nosalt = 1;
     }
     else
     {
