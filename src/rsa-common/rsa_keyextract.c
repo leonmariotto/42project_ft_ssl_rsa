@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:00:12 by leon              #+#    #+#             */
-/*   Updated: 2022/02/08 20:35:27 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/08 21:03:24 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int			check_des_encryption(uint8_t **input, int *len, uint8_t **salt)
 	{
 		// OK There is an encryption, do we handle it ?
 		if (ft_memcmp((char*)(*input + 10), "4,ENCRYPTEDDEK-Info:", 20))
-			return (err_return("Dont try this plz\n"));
+			return (err_return("rsa_extract_key: unknow encryption header\n"));
+//fprintf(stderr, "input = [%s]\n", *input + 30);
 		if (!ft_memcmp((char*)(*input + 30), "DES-CBC", 7))
 		{
 			// CBC 
@@ -52,15 +53,12 @@ int			check_des_encryption(uint8_t **input, int *len, uint8_t **salt)
 			//*input = tmp;
 			return (2);
 		}
-		else if (!ft_memcmp((char*)(*input + 43 + 22), "DES-ECB", 7))
+		else if (!ft_memcmp((char*)(*input + 30), "DES-ECB", 7))
 		{
 			// ECB 
 			//des = get_des();
 			//des->opt->passwd = passwd;
 			*salt = ft_ahextovbin((char*)(*input + 37), 8);
-			int i = -1;
-			while (++i < 8)
-				(*salt)[i] = (*salt)[7 - i];
 			*len -= 54;
 			tmp = ft_memdup((char*)(*input + 54), *len);
 			free(*input);
@@ -70,7 +68,7 @@ int			check_des_encryption(uint8_t **input, int *len, uint8_t **salt)
 			return (1);
 		}
 		else
-			err_return("rsa key: unknow Header");
+			err_return("rsa_extract_key: unknow encryption header");
 	}
 	return (3);
 }
