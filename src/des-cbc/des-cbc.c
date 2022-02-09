@@ -6,7 +6,7 @@
 /*   By: lmariott <lmariott@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/06 21:06:40 by lmariott          #+#    #+#             */
-/*   Updated: 2022/02/08 20:33:41 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 19:35:05 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ int             des_cbc_decrypt(void **ptr, const unsigned char *input, int *len
         else
             ossl_pbkdf(get_des()->opt->passwd, get_des()->salt, 8, 8);
     }
-fprintf(stderr, "key = [%x%x%x%x%x%x%x%x]\n",
-		get_des()->key[0],
-		get_des()->key[1],
-		get_des()->key[2],
-		get_des()->key[3],
-		get_des()->key[4],
-		get_des()->key[5],
-		get_des()->key[6],
-		get_des()->key[7]);
+//fprintf(stderr, "key = [%x%x%x%x%x%x%x%x]\n",
+//		get_des()->key[0],
+//		get_des()->key[1],
+//		get_des()->key[2],
+//		get_des()->key[3],
+//		get_des()->key[4],
+//		get_des()->key[5],
+//		get_des()->key[6],
+//		get_des()->key[7]);
     if (!(get_des()->keyring = tkey(get_des()->key)))
         return (0);
     if (!(*ptr = ft_memalloc(nlen)))

@@ -6,64 +6,14 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 15:08:00 by leon              #+#    #+#             */
-/*   Updated: 2021/12/20 22:32:55 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 22:34:03 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rsa.h"
 
-// OK il faut refaire touuuuuuuuuuuut rsa_process pour au4il fonctionne avec la liste chaine
-int			check_key(t_list *top)
-{
-	t_list *head ;
-	uint64_t	privateExponent;
-	uint32_t	publicExponent;
-	uint32_t	tmp;
-	uint32_t	prime1;
-	uint32_t	prime2;
-
-	head = top;
-	head = head->next;
-	head = head->next;
-	if (((t_asn_obj*)head->content)->len > 4)
-		err_return("publicExponent: Invalid lenght");
-	ft_memcpy(&publicExponent, ((t_asn_obj*)head->content)->content, ((t_asn_obj*)head->content)->len);
-	head = head->next;
-	if (((t_asn_obj*)head->content)->len > 8)
-		err_return("privateExponent: Invalid lenght");
-	ft_memcpy(&privateExponent, ((t_asn_obj*)head->content)->content, ((t_asn_obj*)head->content)->len);
-	head = head->next;
-	if (((t_asn_obj*)head->content)->len > 4)
-		err_return("prime1: Invalid lenght");
-	ft_memcpy(&prime1, ((t_asn_obj*)head->content)->content, ((t_asn_obj*)head->content)->len);
-	head = head->next;
-	if (((t_asn_obj*)head->content)->len > 4)
-		err_return("prime2: Invalid lenght");
-	ft_memcpy(&prime2, ((t_asn_obj*)head->content)->content, ((t_asn_obj*)head->content)->len);
-
-	tmp = lcm(prime1 - 1, prime2 - 1);
-	if (mult_mod(privateExponent, publicExponent, tmp) != 1)
-		err_return("rsa: check failed, key invalid");
-	else
-		ft_putendl_fd("Check done, key OK", 2);
-	return (1);
-
-}
-
 int			rsa_process(t_list *top, t_rsa_opt opt)
 {
-	if (opt.check)
-	{
-		if (opt.pubin)
-			err_return("rsa: check opt is for private key");
-		if (!check_key(top))
-			return (0);
-		//tmp = lcm(key.prime1 - 1, key.prime2 - 1);
-		//if (mult_mod(key.privateExponent, key.publicExponent, tmp) != 1)
-		//	err_return("rsa: check failed, key invalid");
-		//else
-		//	ft_putendl_fd("Check done, key OK", 2);
-	}
 	if (opt.text)
 		print_text(top, opt);
 	if (opt.modulus)
@@ -83,9 +33,13 @@ int			rsa_process(t_list *top, t_rsa_opt opt)
 int			run_rsa(void **av, int ac)
 {
 	int		len;
+	int		len_cpy;
 	t_rsa_opt	opt;
 	t_list		*top;
 	char		*input;
+	char		*cpy;
+	t_rsa_key	key;
+	int		randomfd;
 
 	top = NULL;
 	ft_bzero(&opt, sizeof(opt));
@@ -93,6 +47,28 @@ int			run_rsa(void **av, int ac)
 		return (err_return("rsa: get_opt failed\n"));
 	if (!(len = ft_readfd(opt.infd, &input)))
 		return (err_return("rsa: unable to read file\n"));
+	if (opt.check)
+	{
+		if (opt.pubin)
+			return (err_return("-check is only for private key"));
+		cpy = ft_memdup(input, len);
+		len_cpy = len;
+		if (!(rsa_extract_key_struct(&cpy, &len_cpy,
+				opt.pubin, opt.passin, &key)))
+			return (0);
+		randomfd = open_randomfd(NULL);
+		if (!ft_isprime(key.prime1, 34, randomfd, 1))
+			return (err_return("p is not prime"));
+		write(2, "\n", 1);
+		if (!ft_isprime(key.prime2, 34, randomfd, 1))
+			return (err_return("q is not prime"));
+		write(2, "\n", 1);
+		if (key.modulus != ((uint64_t)(key.prime1) * (uint64_t)(key.prime2)))
+			return (err_return("modulus is not p * q"));
+		close(randomfd);
+		free(cpy);
+		ft_putendl_fd("Check done, key OK", 2);
+	}
 	if (!(rsa_extract_key(&input, &len, opt.pubin, opt.passin, &top)))
 		return (0);
 	if (!rsa_process(top, opt))

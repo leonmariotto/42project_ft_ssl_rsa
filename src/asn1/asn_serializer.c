@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 15:30:23 by leon              #+#    #+#             */
-/*   Updated: 2022/01/13 18:47:02 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 19:39:40 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int				decode_sequence(uint8_t *buf, t_list **top)
 	ft_memcpy(&len, &buf[i], len_len);
 	i += len_len;
 	hlen = i;
-	fprintf(stderr, "decode: len of the sequence = %lu\n", len);
+	//fprintf(stderr, "decode: len of the sequence = %lu\n", len);
 	//fprintf(stderr, "buf = ");
 	//uint8_t j = 0;
 	//while (j < len)

@@ -60,4 +60,10 @@ TODO: Comment prime generation with "How it works"
 3 -> Prime number comments...
 
 
+TODO now : 
+1 - Run une test suite en supportant le plus de features possible : -> sois pas faineant fais un bon script bash
+	-> ft_ssl public keys is not recognized by openssl rsa but with openssl asn1parse we can see it's structure follow pkcs1
+	-> ft_ssl encrypted key are not recognized by openssl and cannot be used by it.
+2 - Clean le code de tout les com et debug
+3 - Prime number generator
 

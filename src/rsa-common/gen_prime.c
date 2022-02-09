@@ -6,11 +6,13 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 10:12:35 by leon              #+#    #+#             */
-/*   Updated: 2022/01/12 19:30:22 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 21:47:33 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rsa.h"
+
+/* Generating prime number with miller rabin probability test */
 
 uint64_t		add_mod(uint64_t a, uint64_t b, uint64_t mod)
 {
@@ -59,6 +61,7 @@ bool		millerrabin(uint32_t n, uint32_t d, int randomfd)
 	u_int64_t	rand;
 	u_int64_t	x;
 
+	/* Pick a random integer in the range 2 > rand > n - 4 */
 	if (!get_random((void*)&rand, 8, randomfd))
 		return (0);
 	rand = (rand % (n - 4)) + 2;
@@ -99,13 +102,14 @@ bool				ft_isprime(uint32_t nb, uint32_t iter, int randomfd, bool verb)
 	return (true);
 }
 
-// 34 itérations : why ?
 uint32_t			gen_prime(int randomfd, bool verb)
 {
 	uint32_t	r;
 
 	if (!get_random(&r, 4, randomfd))
 	       return (0);
+	/* Choose k=34 for a probability of
+	fake positive of 3.38813178902e-21 */
 	while (!ft_isprime(r, 34, randomfd, verb))
 	{
 		if (!get_random(&r, 4, randomfd))

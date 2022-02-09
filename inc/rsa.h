@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/18 10:22:53 by leon              #+#    #+#             */
-/*   Updated: 2022/01/12 19:20:53 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 22:24:18 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ int			rsa_extract_key_struct(char **input, int *len, bool pub,
 		char *paswd, t_rsa_key *key);
 int			asn_serialize_struct(char *buf, int len, t_rsa_key *key);
 int			rsautl_getopt(t_rsautl_opt *opt, char **av, int ac);
+bool				ft_isprime(uint32_t nb, uint32_t iter, int randomfd, bool verb);
 
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: lmariott <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 16:46:29 by lmariott          #+#    #+#             */
-/*   Updated: 2022/02/07 14:03:53 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 19:35:53 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int				asn_deserialize(t_list *top, bool pub,
 	len_len = (len >= 128 ? 2 : 1);
 	if (!(msg = malloc(len + len_len + 1)))
 		return (0);
-fprintf(stderr, "len = %ld ; len_len = %d\n", len, len_len);
+//fprintf(stderr, "len = %ld ; len_len = %d\n", len, len_len);
 	i = 0;
 	pub_counter = 0;
 	msg[i++] = 0x30;

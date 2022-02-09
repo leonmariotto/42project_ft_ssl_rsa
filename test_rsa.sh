@@ -1,15 +1,95 @@
+echo "\n\nDo simple test for des encryption\n\n"
+
 echo "coucou" > data
 echo ./ft_ssl genrsa -o k
 ./ft_ssl genrsa -o k
-echo ./ft_ssl rsa -in k -des-cbc -out k.des
-./ft_ssl rsa -in k -des-ecb -out k.des
+echo ./ft_ssl rsa -in k -des-ecb -out k.ecb
+./ft_ssl rsa -in k -des-ecb -out k.ecb
+echo ./ft_ssl rsa -in k -des-cbc -out k.cbc
+./ft_ssl rsa -in k -des-cbc -out k.cbc
+
+echo ./ft_ssl rsa -in k -passin "coucou" -des-cbc -out k.cbc.pass
+./ft_ssl rsa -in k -passout "c" -des-cbc -out k.cbc.pass
+echo ./ft_ssl rsautl -in data -inkey k.cbc.pass -out data.enc3
+./ft_ssl rsautl -in data -inkey k.cbc.pass -out data.enc3
+
 echo ./ft_ssl rsautl -in data -inkey k.des -out data.enc
-./ft_ssl rsautl -in data -inkey k.des -out data.enc
+./ft_ssl rsautl -in data -inkey k.ecb -out data.enc
 echo ./ft_ssl rsautl -in data.enc -inkey k.des -out data.dec
-./ft_ssl rsautl -in data.enc -inkey k.des -out data.dec -d
+./ft_ssl rsautl -in data.enc -inkey k.ecb -out data.dec -d
+echo ./ft_ssl rsautl -in data -inkey k -out data.enc2
+./ft_ssl rsautl -in data -inkey k -out data.enc2
 echo diff data.enc data.dec
 diff data data.dec
-rm data.enc data.dec data k k.des
+echo diff data.enc data.enc2
+diff data.enc data.enc2
+echo diff data.enc data.enc3
+diff data.enc data.enc3
+
+echo ./ft_ssl rsa -in k.cbc -passin coucou -noout -text
+./ft_ssl rsa -in k.cbc -passin c -noout -text
+echo ./ft_ssl rsautl -in data -inkey k.des -out data.enc
+./ft_ssl rsautl -in data -inkey k.cbc -out data.enc
+echo ./ft_ssl rsautl -in data.enc -inkey k.des -out data.dec
+./ft_ssl rsautl -in data.enc -inkey k.cbc -out data.dec -d
+echo ./ft_ssl rsautl -in data -inkey k -out data.enc2
+./ft_ssl rsautl -in data -inkey k -out data.enc2
+echo diff data.enc data.dec
+diff data data.dec
+echo diff data.enc data.enc2
+diff data.enc data.enc2
+
+rm data.enc data.enc3 data.enc2 data.dec data k k.des
+
+
+echo "\n\nDo simple test for genrsa\n\n"
+echo ./ft_ssl genrsa -i Makefile -o k
+./ft_ssl genrsa -i Makefile -o k
+echo ./ft_ssl genrsa -i Makefile -o kk
+./ft_ssl genrsa -i Makefile -o kk
+echo ./ft_ssl genrsa -o ok
+./ft_ssl genrsa -o ok
+echo openssl rsa -in ok -text
+openssl rsa -in ok -text
+echo diff k kk
+diff k kk
+rm k kk ok
+
+echo "\n\nDo simple test for rsa\n\n"
+./ft_ssl genrsa -o k
+echo TOCHECK: ./ft_ssl rsa -in k -noout
+./ft_ssl rsa -in k -noout
+echo TOCKECK: ./ft_ssl rsa -in k -noout -text
+./ft_ssl rsa -in k -noout -text
+echo TOCKECK: ./ft_ssl rsa -in k -noout -modulus
+./ft_ssl rsa -in k -noout -modulus
+echo ./ft_ssl rsa -in k -noout -check
+./ft_ssl rsa -in k -noout -check
+rm k
+
+
+echo "\n\nDo test for pub key\n\n"
+./ft_ssl genrsa -o k
+echo coucou > data
+echo ./ft_ssl rsa -in k -pubout -out k.pub
+./ft_ssl rsa -in k -pubout -out k.pub
+echo openssl asn1parse -in k.pub
+openssl asn1parse -in k.pub
+echo ./ft_ssl rsautl -in data -inkey k.pub -pubin -out data.enc
+./ft_ssl rsautl -in data -inkey k.pub -pubin -out data.enc
+echo ./ft_ssl rsautl -in data -inkey k -decrypt -out data.dec -hexdump
+./ft_ssl rsautl -in data.enc -inkey k -decrypt -out data.dec -hexdump
+echo diff data data.dec
+diff data data.dec
+echo ./ft_ssl rsa -in k.pub -pubin -text -noout
+./ft_ssl rsa -in k.pub -pubin -text -noout
+echo ./ft_ssl rsa -in k.pub -pubin -text
+./ft_ssl rsa -in k.pub -pubin -text
+
+
+rm k k.pub data data.dec data.enc
+
+
 
 
 

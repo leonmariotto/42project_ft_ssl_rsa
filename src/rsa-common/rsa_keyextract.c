@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:00:12 by leon              #+#    #+#             */
-/*   Updated: 2022/02/08 21:03:24 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 19:35:32 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ int			check_des_encryption(uint8_t **input, int *len, uint8_t **salt)
 			//while (++i < 8)
 			//	salted[i] = (*salt)[7 - i];
 			//ft_memcpy(*salt, salted, 8);
-			fprintf(stderr, "salt = [%x %x %x %x %x %x %x %x]\n",
-				(*salt)[0],
-				(*salt)[1],
-				(*salt)[2],
-				(*salt)[3],
-				(*salt)[4],
-				(*salt)[5],
-				(*salt)[6],
-				(*salt)[7]);
+			//fprintf(stderr, "salt = [%x %x %x %x %x %x %x %x]\n",
+			//	(*salt)[0],
+			//	(*salt)[1],
+			//	(*salt)[2],
+			//	(*salt)[3],
+			//	(*salt)[4],
+			//	(*salt)[5],
+			//	(*salt)[6],
+			//	(*salt)[7]);
 			//des->opt->passwd = passwd;
 			*len -= 54;
 			tmp = ft_memdup((char*)(*input + 54), *len);

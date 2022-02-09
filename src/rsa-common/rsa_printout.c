@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 20:14:07 by leon              #+#    #+#             */
-/*   Updated: 2022/02/08 20:44:33 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 19:44:28 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int			rsa_print_out(t_list *top, t_rsa_opt opt)
 				return (0);
 			get_des()->salt = salt;
 			get_des()->iv = salt;
-			get_des()->opt->passwd = NULL;
+			get_des()->opt->passwd = opt.passout;
 			get_des()->opt->nosalt = 1;
 			get_des()->opt->pbkdf2 = 0;
 			des_cbc(&des, (uint8_t*)msg, &len, 0);
@@ -94,7 +94,7 @@ int			rsa_print_out(t_list *top, t_rsa_opt opt)
 				return (0);
 			get_des()->salt = salt;
 			get_des()->iv = salt;
-			get_des()->opt->passwd = NULL;
+			get_des()->opt->passwd = opt.passout;
 			get_des()->opt->nosalt = 1;
 			get_des()->opt->pbkdf2 = 0;
 			des_ecb(&des, msg, &len, 0);

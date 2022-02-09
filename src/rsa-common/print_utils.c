@@ -6,7 +6,7 @@
 /*   By: leon <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 09:57:29 by leon              #+#    #+#             */
-/*   Updated: 2022/01/13 18:24:05 by leon             ###   ########.fr       */
+/*   Updated: 2022/02/09 19:39:02 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,37 +67,29 @@ void			print_text(t_list *top, t_rsa_opt opt)
 	head = head->next;
 	ft_putstr_fd("modulus : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 	ft_putstr_fd("publicExponent : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	if (opt.pubin)
 		return ;
 	head = head->next;
 	ft_putstr_fd("privateExponent : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 	ft_putstr_fd("prime1 : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 	ft_putstr_fd("prime2 : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 	ft_putstr_fd("exponent1 : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 	ft_putstr_fd("exponent2 : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 	ft_putstr_fd("coefficient : ", 2);
 	print_obj(head->content);
-	write(2, "\n", 1);
 	head = head->next;
 }
 
