@@ -1,46 +1,46 @@
 # ft_ssl
 
-Openssl-like cryptographic utility from scratch.
-Run make to compile.
+Openssl-like cryptographic utility from scratch. <br>
+Run make to compile. <br>
 
 ## Usage
 
-./ft_ssl command [command opts] [command args]
+./ft_ssl command [command opts] [command args] <br>
 
-Standard commands:
-rsa
-genrsa:
-    -i [FILE]: input file
-    -o [FILE]: output file
-rsautl
+Standard commands: <br>
+rsa <br>
+genrsa: <br>
+    -i [FILE]: input file <br>
+    -o [FILE]: output file <br>
+rsautl <br>
 
-Message Digest commands:
-md5:
-sha256:
-    -q: quiet mode
-    -r: reverse the format of the output
-    -p: echo STDIN to STDOUT and append the digest
-    -s [STRING]: input string
-    -s [STRING]: input string
+Message Digest commands: <br>
+md5: <br>
+sha256: <br>
+    -q: quiet mode <br>
+    -r: reverse the format of the output <br>
+    -p: echo STDIN to STDOUT and append the digest <br>
+    -s [STRING]: input string <br>
+    -s [STRING]: input string <br>
 
-Cipher commands:
-base64:
-    -d: decryption
-    -e: encryption
-    -i [FILE]: input file
-    -o [FILE]: output file
-des-ecb:
-des-cbc:
-des3-ecb:
-des3-cbc:
-    -d: decryption
-    -e: encryption
-    -pbkdf2: use pbkdf2 for password derivation
-    -nosalt: no salt mode
-    -iter [NB]: number of iteration
-    -p [PASSWORD]: password string
-    -iv [HEX STRING]: initialization vector in hex
-    -k [HEX STRING]: key in hex
-    -i [FILE]: input file
-    -o [FILE]: output file
+Cipher commands: <br>
+base64: <br>
+    -d: decryption <br>
+    -e: encryption <br>
+    -i [FILE]: input file <br>
+    -o [FILE]: output file <br>
+des-ecb: <br>
+des-cbc: <br>
+des3-ecb: <br>
+des3-cbc: <br>
+    -d: decryption <br>
+    -e: encryption <br>
+    -pbkdf2: use pbkdf2 for password derivation <br>
+    -nosalt: no salt mode <br>
+    -iter [NB]: number of iteration <br>
+    -p [PASSWORD]: password string <br>
+    -iv [HEX STRING]: initialization vector in hex <br>
+    -k [HEX STRING]: key in hex <br>
+    -i [FILE]: input file <br>
+    -o [FILE]: output file <br>
 
